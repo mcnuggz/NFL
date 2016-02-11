@@ -114,11 +114,11 @@ namespace NFL
         }
         public virtual void Catch()
         {
-            Console.WriteLine("");
+            
         }
         public override string ToString()
         {
-            return String.Format("{0}: {1} - {2}| ", team.Name, Name, JerseyNumber);
+            return String.Format("{0}: {1} - {2}", team.Name, Name, JerseyNumber);
         }
     }
 }
