@@ -9,7 +9,7 @@ namespace NFL
     public class Player
     {
         #region member variables
-        Team team ;
+        Team team;
         private string _name;
         private int _jerseynumber;
         private int _age;
@@ -17,13 +17,18 @@ namespace NFL
         private double _rating;
         private Grouping _group;
         #endregion
-        public Player(string name, int jerseyNumber, Grouping group, int age, float weight)
+        public Player()
+        {
+
+        }
+        public Player(string name, int jerseyNumber, Grouping group, int age, float weight, double rating)
         {
             this.Name = name;
             this.JerseyNumber = jerseyNumber;
             this.Group = group;
             this.Age = age;
             this.Weight = weight;
+            this.Rating = rating;
         }
         #region getsetters
         public string Name
@@ -102,23 +107,12 @@ namespace NFL
         {
 
         }
-
-        public virtual void Kick()
-        {
-
-        }
         
-        public virtual void Block()
-        {
-
-        }
         public virtual void Catch()
         {
             
         }
-        public override string ToString()
-        {
-            return String.Format("{0}: {1} - {2}", team.Name, Name, JerseyNumber);
-        }
+
+
     }
 }

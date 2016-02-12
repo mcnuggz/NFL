@@ -10,7 +10,6 @@ namespace NFL
     {
         #region member variables
         Random r;
-        private bool _passCaught = false;
         private int _attemptedPasses;
         private int _completedPasses;
         private decimal _passingPercentage;
@@ -19,7 +18,7 @@ namespace NFL
         private int _interceptions;
         private int _passingYards;
         #endregion
-        public Quarterback(string name, int jerseyNumber, Grouping group, int age, float weight, int attemptedPasses, int completedPasses, int touchdowns, int interceptions, int passingYards) : base(name, jerseyNumber, group, age, weight)
+        public Quarterback(string name, int jerseyNumber, Grouping group, int age, float weight, double rating, int attemptedPasses, int completedPasses, int touchdowns, int interceptions, int passingYards) : base(name, jerseyNumber, group, age, weight, rating)
         {
             this.AttemptedPasses = attemptedPasses;
             this.CompletedPasses = completedPasses;
@@ -104,7 +103,21 @@ namespace NFL
         {
             Console.WriteLine("Hut...hut...hike!");
             Thread.Sleep(2000);
-            Pass();
+            r = new Random();
+            int action = r.Next(1, 3);
+            if (action == 1)
+            {
+                Pass();
+            }
+            else if (action == 2)
+            {
+                Rush();
+            }
+            else
+            {
+                Console.WriteLine("Aw, sacked by the defense!");
+            }
+            
         }
         public override void Pass()
         {
@@ -115,7 +128,6 @@ namespace NFL
                 Console.WriteLine("Looking for someone open...");
                 Thread.Sleep(2000);
                 Console.WriteLine("He throws it deep, HAIL MARY!!");
-                _passCaught = true;
                 _completedPasses++;
                 _attemptedPasses++;
                 GetPassingRate(_completedPasses, _attemptedPasses, _touchdowns, _passingYards, _interceptions);
@@ -152,6 +164,25 @@ namespace NFL
             double d = 2.375 - (value5 / value2 * 25);
             _passingRate = (a + b + c + d / 6) * 100;
             return _passingRate;
+        }
+        public static List<Player> operator +(Quarterback player, Team team)
+        {
+            if (!team.roster.playerList.Contains(player))
+            {
+                team.roster.playerList.Add(player);
+            }
+            team.WriteToFile("../../GreenBayPackersRoster.txt");
+            return team.roster.playerList;
+
+        }
+        public static List<Player> operator -(Quarterback player, Team team)
+        {
+            if (team.roster.playerList.Contains(player))
+            {
+                team.roster.playerList.Remove(player);
+            }
+            team.WriteToFile("../../GreenBayPackersRoster.txt");
+            return team.roster.playerList;
         }
     }
 }

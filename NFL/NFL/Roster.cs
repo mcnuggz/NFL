@@ -8,13 +8,18 @@ using System.Threading.Tasks;
 
 namespace NFL
 {
-    public class Roster : IEnumerable, IRead, IWrite
+    public class Roster : IEnumerable
     {
-        public static List<Player> playerList;
+        #region member variables and getsetters
+        Team team;
+        public List<Player> playerList;
         private static List<string> tempList = new List<string>();
         private double _avgOverallRating;
         private double _avgAge;
         private double _avgWeight;
+        private float _totalWeight;
+        private int _totalAge;
+        private double _totalRating;
         public double AverageOverallRating
         {
             get
@@ -48,69 +53,67 @@ namespace NFL
                 _avgWeight = value;
             }
         }
+        #endregion
         public Roster()
         {
             playerList = new List<Player>();
         }
-        public static List<Player> operator +(Player player, Roster roster)
-        {
-            if (!playerList.Contains(player))
-            {
-                playerList.Add(player);
-            }
-            return playerList;
-        }
-        public static List<Player> operator -(Player player, Roster roster)
-        {
-            if (playerList.Contains(player))
-            {
-                playerList.Remove(player);
-            }
-            return playerList;
-        }
 
+        public void UpdateList()
+        {
+            UpdateAvgAge();
+            UpdateAvgWeight();
+            UpdateOverallRating();
+        }
+        private double UpdateOverallRating()
+        {
+            foreach (Player player in playerList)
+            {
+                _totalRating += player.Rating;
+            }
+            return _avgOverallRating = _totalRating / playerList.Count;
+        }
+        private double UpdateAvgAge()
+        {           
+            foreach (Player player in playerList)
+            {
+                _totalAge += player.Age;
+            }
+            return _avgAge = _totalAge / playerList.Count;
+
+        }
+        private double UpdateAvgWeight()
+        {
+            foreach (Player player in playerList)
+            {
+                _totalWeight += player.Weight;
+            }
+            return _avgWeight = _totalWeight / playerList.Count;
+        }
         public IEnumerator GetEnumerator()
         {
             foreach (Player player in playerList)
             {
-                yield return player.Rating;
+                yield return player;
             }
         }
-
         public void PrintTopFive()
         {
-            foreach (Player player in playerList)
+            playerList.Sort(delegate (Player x, Player y)
             {
-                for (int i = 1; i < 5; i++)
-                {
-                    Console.WriteLine(player.ToString());
-                }
+                return y.Rating.CompareTo(x.Rating);
+            });
+
+            List<Player> temp = playerList.OrderByDescending(i => i.Rating).Take(5).ToList();
+
+            Console.WriteLine("Top Five" + Environment.NewLine);
+            foreach (Player player in temp)
+            {
+                Console.WriteLine("{0} - #{1} | Rating: {2}", player.Name, player.JerseyNumber, player.Rating);
             }
+            Console.WriteLine("Count: " + temp.Count);
         }
 
-        public void ReadFile(string path)
-        {
-            int counter = 0;
-            string line;
-            using (StreamReader file = new StreamReader(path))
-            {
-                while ((line = file.ReadLine()) != null)
-                {
-                    tempList.Add(line);
-                    counter++;
-                }
-            }
-        }
 
-        public  void WriteToFile(string path)
-        {
-            using (StreamWriter writer = new StreamWriter(path))
-            {
-                foreach (Player player in playerList)
-                {
-                    writer.WriteLine(player.ToString());
-                }
-            }
-        }
     }
 }

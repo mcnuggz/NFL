@@ -10,13 +10,7 @@ namespace NFL
     {
         private int _receptions;
         private int _receivingYards;
-        private int _receivingTDs; 
-        public WideReceiver(string name, int jerseyNumber, Grouping group, int age, float weight, int receptions, int receivingYards, int receivingTouchdowns) : base(name, jerseyNumber, group, age, weight)
-        {
-            this.Receptions = receptions;
-            this.ReceivingYards = receivingYards;
-            this.ReceivingTouchdowns = receivingTouchdowns;
-        }
+        private int _receivingTDs;
         public int Receptions
         {
             get
@@ -50,6 +44,32 @@ namespace NFL
                 _receivingTDs = value;
             }
         }
-        
+        public WideReceiver(string name, int jerseyNumber, Grouping group, int age, float weight, double rating, int receptions, int receivingYards, int receivingTouchdowns) : base(name, jerseyNumber, group, age, weight, rating)
+        {
+            this.Receptions = receptions;
+            this.ReceivingYards = receivingYards;
+            this.ReceivingTouchdowns = receivingTouchdowns;
+        }
+
+        public static List<Player> operator +(WideReceiver player, Team team)
+        {
+            if (!team.roster.playerList.Contains(player))
+            {
+                team.roster.playerList.Add(player);
+            }
+            team.WriteToFile("../../GreenBayPackersRoster.txt");
+            return team.roster.playerList;
+
+        }
+        public static List<Player> operator -(WideReceiver player, Team team)
+        {
+            if (team.roster.playerList.Contains(player))
+            {
+                team.roster.playerList.Remove(player);
+            }
+            team.WriteToFile("../../GreenBayPackersRoster.txt");
+            return team.roster.playerList;
+        }
+
     }
 }
